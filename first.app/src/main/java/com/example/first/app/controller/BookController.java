@@ -1,45 +1,77 @@
 package com.example.first.app.controller;
 
 import com.example.first.app.model.Book;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.first.app.services.BookServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+/*
+* @Controller: tra ve template. ngoài ra co the tra ve du lieu o dang JSON, XML  // khi su dung phai co @ResponseBody
+* @RestController: tra ve du lieu json, xml,...
+* @RestController = @Controller + @ResponseBody
+* Class ResponseEntity<T>: dai dien cho 1 HTTP Response, bao gom status code, headers va body
+* */
+
+
+@Controller
 @RequestMapping("/books")
 public class BookController {
-    private List<Book> books;
+    @Autowired
+    private BookServices bookServices;
 
-    public BookController() {
-        books = new ArrayList<>();
-        books.add(new Book(1, "Harry Potter", "J,K",1997));
-        books.add(new Book(2, "Harry Potter", "J,K",1997));
-        books.add(new Book(3, "Harry Potter", "J,K",1997));
+    // tra ve templace index, html nao nam tron muc resouce, templace
+    @GetMapping("/home")
+    public  String getHome() {
+        return "index";
     }
 
     // lấy danh sách tất cả book
     // GET https//localhost:8080/books
+    // @RequestMapping(method = RequestMethod.GET)
     @GetMapping
+    @ResponseBody
+//    @ResponseStatus(HttpStatus.CREATED) //201
     public List<Book> getAllBook() {
-        return books;
+        return bookServices.getAllBook();
     }
 
-
+//    @GetMapping("getAllBook")
+//    public ResponseEntity<?> getAllBook1() {
+//        return new ResponseEntity<>(books,HttpStatus.CREATED);
+//    }
 
     // lấy thông tin của sách theo id
     // GET http://localhost:8080/books/1, https//localhost:8080/books/2,...
     @GetMapping("/{id}")
+    @ResponseBody
     public Book getBookById(@PathVariable int id) {
-        for (Book book : books) {
-            if (book.getId() == id) {
-                return book;
-            }
-        }
-        return null; // ném ra ngoại lệ
+        return bookServices.getBookByID(id);
     }
+
+    @GetMapping("/sortByYear")
+    @ResponseBody
+    public List<Book> sortByYear() {
+        return bookServices.sortByYear();
+    }
+
+    @GetMapping("/search/{name}")
+    @ResponseBody
+    public List <Book> getBookByName(@PathVariable String name) {
+        return bookServices.getBookByName(name);
+    }
+
+
+    @GetMapping("/startYear/{startYear}/endYear/{endYear}")
+    @ResponseBody
+    public List <Book> getBookByYear(@PathVariable int startYear, @PathVariable int endYear) {
+        return bookServices.getBookByYear(startYear, endYear);
+    }
+
 
 }
