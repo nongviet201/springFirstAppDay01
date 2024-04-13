@@ -36,7 +36,6 @@ public class BookDAOImpl implements BookDAO{
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
                 if (sortedBooks.get(j).getYear() > sortedBooks.get(j + 1).getYear()) {
-                    // Hoán đổi vị trí của hai cuốn sách
                     Book temp = sortedBooks.get(j);
                     sortedBooks.set(j, sortedBooks.get(j + 1));
                     sortedBooks.set(j + 1, temp);
