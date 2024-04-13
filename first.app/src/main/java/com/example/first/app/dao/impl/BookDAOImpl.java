@@ -30,7 +30,6 @@ public class BookDAOImpl implements BookDAO{
 
     @Override
     public List<Book> sortByYear() {
-        // Tạo một bản sao của danh sách sách hiện tại
         List<Book> sortedBooks = new ArrayList<>(books);
 
         int n = sortedBooks.size();
@@ -44,8 +43,6 @@ public class BookDAOImpl implements BookDAO{
                 }
             }
         }
-
-        // Trả về danh sách sách đã được sắp xếp
         return sortedBooks;
     }
 
